@@ -1,0 +1,29 @@
+# Build output
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio settings
+.vs/
+.vscode/
+
+# OS artifacts
+Thumbs.db
+*.DS_Store
+
+# Logs and crash dumps
+*.log
+*.pid
+
+# Secrets and environment files
+appsettings.Development.json
+.env
+
+# NuGet packages
+*.nupkg
+packages/
