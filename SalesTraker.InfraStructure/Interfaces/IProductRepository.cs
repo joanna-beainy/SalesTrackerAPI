@@ -15,5 +15,7 @@ namespace SalesTracker.InfraStructure.Interfaces
         Task<IEnumerable<Product>> GetLowStockAsync();
         Task<IEnumerable<Product>> SearchAsync(String keyword);
 
+        Task BulkInsertAsync(List<Product> products);
+
     }
 }

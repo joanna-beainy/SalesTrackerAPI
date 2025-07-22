@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SalesTracker.Application.DTOs;
 using SalesTracker.Application.Interfaces;
+using SalesTracker.Application.Services;
 using SalesTracker.Shared.Constants;
 using SalesTracker.Shared.Responses;
 
@@ -12,10 +13,12 @@ namespace SalesTrackerAPI.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductService _service;
+        private readonly IExcelImportService _excelImportService;
 
-        public ProductController(IProductService service)
+        public ProductController(IProductService service, IExcelImportService excelImportService)
         {
             _service = service;
+            _excelImportService = excelImportService;
         }
 
         // GET: api/product
@@ -69,7 +72,7 @@ namespace SalesTrackerAPI.Controllers
         public async Task<IActionResult> UpdateStock(int id, [FromBody] UpdateStockDto dto)
         {
             await _service.UpdateStockAsync(id, dto);
-            return Ok(ApiResponse<string>.Ok(null,APIMessages.StockUpdated));
+            return Ok(ApiResponse<string>.Ok(null, APIMessages.StockUpdated));
         }
 
         // GET: api/product/low-stock
@@ -94,6 +97,14 @@ namespace SalesTrackerAPI.Controllers
                 return NotFound(ApiResponse<IEnumerable<ReadProductDto>>.Fail(APIMessages.SearchKeywordNotFound(keyword)));
 
             return Ok(ApiResponse<IEnumerable<ReadProductDto>>.Ok(results, APIMessages.SearchResultsRetrieved));
+        }
+
+
+        [HttpPost("import-excel")]
+        public async Task<IActionResult> ImportExcel(IFormFile file)
+        {
+            var imported = await _excelImportService.ImportProductsFromExcelAsync(file);
+            return Ok(ApiResponse<List<ReadProductDto>>.Ok(imported));
         }
     }
 }

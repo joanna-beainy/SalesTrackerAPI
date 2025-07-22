@@ -74,6 +74,12 @@ namespace SalesTracker.InfraStructure.Repositories
         {
             return await _context.Products.Where(p => p.IsActive && (p.Name.Contains(keyword) || p.Category.Contains(keyword))).ToListAsync();
         }
+        public async Task BulkInsertAsync(List<Product> products)
+        {
+            await _context.Products.AddRangeAsync(products);
+            await _context.SaveChangesAsync();
+        }
+
 
     }
 }

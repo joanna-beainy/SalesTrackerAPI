@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using SalesTracker.Application.Interfaces;
 using SalesTracker.Application.Services;
-using SalesTracker.InfraStructure.Interfaces;
 using SalesTracker.InfraStructure.Data;
+using SalesTracker.InfraStructure.Interfaces;
 using SalesTracker.InfraStructure.Repositories;
 
 
@@ -26,6 +26,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 
 builder.Services.AddScoped<ISaleRepository, SaleRepository>();
 builder.Services.AddScoped<ISaleService, SaleService>();
+builder.Services.AddScoped<IExcelImportService, ExcelImportService>();
 
 
 builder.Services.AddAutoMapper(typeof(Program));

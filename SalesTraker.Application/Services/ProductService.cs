@@ -3,6 +3,8 @@ using SalesTracker.Application.DTOs;
 using SalesTracker.Application.Interfaces;
 using SalesTracker.InfraStructure.Interfaces;
 using SalesTracker.InfraStructure.Models.Entities;
+using SalesTracker.InfraStructure.Repositories;
+using System.Text.Json;
 
 namespace SalesTracker.Application.Services
 {
@@ -10,7 +12,6 @@ namespace SalesTracker.Application.Services
     {
         private readonly IProductRepository _repo;
         private readonly IMapper _mapper;
-
         public ProductService(IProductRepository repo, IMapper mapper)
         {
             _repo = repo;
@@ -68,5 +69,6 @@ namespace SalesTracker.Application.Services
             var products = await _repo.SearchAsync(keyword);
             return _mapper.Map<IEnumerable<ReadProductDto>>(products);
         }
+
     }
 }
