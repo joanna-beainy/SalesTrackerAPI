@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 using SalesTracker.Application.DTOs;
 using SalesTracker.Application.Interfaces;
 using SalesTracker.InfraStructure.Interfaces;
@@ -12,17 +13,28 @@ namespace SalesTracker.Application.Services
     {
         private readonly IProductRepository _repo;
         private readonly IMapper _mapper;
-        public ProductService(IProductRepository repo, IMapper mapper)
+        private readonly IRedisCacheService _redisCache;
+        public ProductService(IProductRepository repo, IMapper mapper, IRedisCacheService redisCache)
         {
             _repo = repo;
             _mapper = mapper;
+            _redisCache = redisCache;
         }
 
         public async Task<IEnumerable<ReadProductDto>> GetAllAsync()
         {
+            const string cacheKey = "products:all";
+            var cached = await _redisCache.GetAsync<IEnumerable<ReadProductDto>>(cacheKey);
+
+            if (cached != null) return cached;
+
             var products = await _repo.GetAllAsync();
-            return _mapper.Map<IEnumerable<ReadProductDto>>(products);
+            var mapped = _mapper.Map<IEnumerable<ReadProductDto>>(products);
+
+            await _redisCache.SetAsync(cacheKey, mapped, TimeSpan.FromMinutes(5));
+            return mapped;
         }
+
 
         public async Task<ReadProductDto?> GetByIdAsync(int id)
         {
@@ -36,6 +48,7 @@ namespace SalesTracker.Application.Services
             var product = _mapper.Map<Product>(dto);
             product.IsActive = true;
             await _repo.AddAsync(product);
+            await _redisCache.RemoveAsync("products:all");
         }
 
         public async Task UpdateAsync(int id, UpdateProductDto dto)
@@ -46,16 +59,19 @@ namespace SalesTracker.Application.Services
             var updatedProduct = _mapper.Map<Product>(dto);
 
             await _repo.UpdateAsync(id, updatedProduct);
+            await _redisCache.RemoveAsync("products:all");
         }
 
         public async Task SoftDeleteAsync(int id)
         {
             await _repo.SoftDeleteAsync(id);
+            await _redisCache.RemoveAsync("products:all");
         }
 
         public async Task UpdateStockAsync(int id, UpdateStockDto dto)
         {
             await _repo.UpdateStockAsync(id, dto.Stock);
+            await _redisCache.RemoveAsync("products:all");
         }
 
         public async Task<IEnumerable<ReadProductDto>> GetLowStockAsync()
@@ -69,6 +85,5 @@ namespace SalesTracker.Application.Services
             var products = await _repo.SearchAsync(keyword);
             return _mapper.Map<IEnumerable<ReadProductDto>>(products);
         }
-
     }
 }

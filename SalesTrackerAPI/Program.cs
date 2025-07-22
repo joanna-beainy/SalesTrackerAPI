@@ -4,6 +4,7 @@ using SalesTracker.Application.Services;
 using SalesTracker.InfraStructure.Data;
 using SalesTracker.InfraStructure.Interfaces;
 using SalesTracker.InfraStructure.Repositories;
+using StackExchange.Redis;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +28,18 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ISaleRepository, SaleRepository>();
 builder.Services.AddScoped<ISaleService, SaleService>();
 builder.Services.AddScoped<IExcelImportService, ExcelImportService>();
+builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
+
+
+
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    var configuration = builder.Configuration.GetSection("Redis")["ConnectionString"];
+    return ConnectionMultiplexer.Connect(configuration);
+});
+
+builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
+
 
 
 builder.Services.AddAutoMapper(typeof(Program));
