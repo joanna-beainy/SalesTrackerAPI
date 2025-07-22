@@ -12,12 +12,12 @@ namespace SalesTrackerAPI.Controllers
     [Route("api/[controller]")]
     public class ProductController : ControllerBase
     {
-        private readonly IProductService _service;
+        private readonly IProductService _productService;
         private readonly IExcelImportService _excelImportService;
 
         public ProductController(IProductService service, IExcelImportService excelImportService)
         {
-            _service = service;
+            _productService = service;
             _excelImportService = excelImportService;
         }
 
@@ -25,7 +25,7 @@ namespace SalesTrackerAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<ApiResponse<IEnumerable<ReadProductDto>>>> GetAll()
         {
-            var products = await _service.GetAllAsync();
+            var products = await _productService.GetAllAsync();
 
             if (!products.Any())
                 return NotFound(ApiResponse<String>.Fail(APIMessages.NoProduct));
@@ -37,7 +37,7 @@ namespace SalesTrackerAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ApiResponse<ReadProductDto>>> GetById(int id)
         {
-            var product = await _service.GetByIdAsync(id);
+            var product = await _productService.GetByIdAsync(id);
             return product == null
                 ? NotFound(ApiResponse<ReadProductDto>.Fail(APIMessages.ProductNotFound))
                 : Ok(ApiResponse<ReadProductDto>.Ok(product, APIMessages.ProductRetrieved));
@@ -47,7 +47,7 @@ namespace SalesTrackerAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AddProductDto dto)
         {
-            await _service.AddAsync(dto);
+            await _productService.AddAsync(dto);
             return Ok(ApiResponse<string>.Ok(null, APIMessages.ProductCreated));
         }
 
@@ -55,7 +55,7 @@ namespace SalesTrackerAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateProductDto dto)
         {
-            await _service.UpdateAsync(id, dto);
+            await _productService.UpdateAsync(id, dto);
             return Ok(ApiResponse<string>.Ok(null, APIMessages.ProductUpdated));
         }
 
@@ -63,7 +63,7 @@ namespace SalesTrackerAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> SoftDelete(int id)
         {
-            await _service.SoftDeleteAsync(id);
+            await _productService.SoftDeleteAsync(id);
             return Ok(ApiResponse<string>.Ok(null, APIMessages.ProductDeleted));
         }
 
@@ -71,7 +71,7 @@ namespace SalesTrackerAPI.Controllers
         [HttpPatch("{id}/stock")]
         public async Task<IActionResult> UpdateStock(int id, [FromBody] UpdateStockDto dto)
         {
-            await _service.UpdateStockAsync(id, dto);
+            await _productService.UpdateStockAsync(id, dto);
             return Ok(ApiResponse<string>.Ok(null, APIMessages.StockUpdated));
         }
 
@@ -79,7 +79,7 @@ namespace SalesTrackerAPI.Controllers
         [HttpGet("low-stock")]
         public async Task<ActionResult<ApiResponse<IEnumerable<ReadProductDto>>>> GetLowStock()
         {
-            var products = await _service.GetLowStockAsync();
+            var products = await _productService.GetLowStockAsync();
 
             if (!products.Any())
                 return Ok(ApiResponse<IEnumerable<ReadProductDto>>.Ok(products, APIMessages.NoLowStock));
@@ -92,7 +92,7 @@ namespace SalesTrackerAPI.Controllers
         [HttpGet("search")]
         public async Task<ActionResult<ApiResponse<IEnumerable<ReadProductDto>>>> Search([FromQuery] string keyword)
         {
-            var results = await _service.SearchAsync(keyword);
+            var results = await _productService.SearchAsync(keyword);
             if (!results.Any())
                 return NotFound(ApiResponse<IEnumerable<ReadProductDto>>.Fail(APIMessages.SearchKeywordNotFound(keyword)));
 
