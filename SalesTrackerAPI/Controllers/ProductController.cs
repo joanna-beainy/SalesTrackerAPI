@@ -110,7 +110,7 @@ namespace SalesTrackerAPI.Controllers
         [HttpGet("paged")]
         public async Task<IActionResult> GetPaged([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var result = await _service.GetPaginatedAsync(page, pageSize);
+            var result = await _productService.GetPaginatedAsync(page, pageSize);
             return Ok(result);
         }
 
