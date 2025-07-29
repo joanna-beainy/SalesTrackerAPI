@@ -12,14 +12,21 @@ namespace SalesTracker.InfraStructure.Data
                 serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
             {
                 // Check if roles already exist
-                if (context.Roles.Any())
-                    return;
+                var rolesToSeed = new[]
+                {
+                    new Role { Name = "admin", Description = "Administrator privileges", CreatedAt = DateTime.UtcNow },
+                    new Role { Name = "cashier", Description = "Cashier privileges", CreatedAt = DateTime.UtcNow },
+                    new Role { Name = "manager", Description = "Manager privileges", CreatedAt = DateTime.UtcNow },
+                    new Role { Name = "user", Description = "General user access", CreatedAt = DateTime.UtcNow }
+                };
 
-                // Seed roles
-                context.Roles.AddRange(
-                    new Role {  Name = "admin", Description = "Administrator privileges", CreatedAt = DateTime.UtcNow },
-                    new Role {  Name = "cashier", Description = "Cashier privileges", CreatedAt = DateTime.UtcNow }
-                );
+                foreach (var role in rolesToSeed)
+                {
+                    if (!context.Roles.Any(r => r.Name == role.Name))
+                    {
+                        context.Roles.Add(role);
+                    }
+                }
 
                 context.SaveChanges();
             }

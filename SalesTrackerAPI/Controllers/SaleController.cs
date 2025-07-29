@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SalesTracker.Application.DTOs;
 using SalesTracker.Application.Interfaces;
 using SalesTracker.Shared;
@@ -8,6 +9,7 @@ using SalesTracker.Shared.Responses;
 namespace SalesTrackerAPI.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class SaleController : ControllerBase
     {
@@ -41,6 +43,7 @@ namespace SalesTrackerAPI.Controllers
         }
 
         // GET: api/sale/date-range?from=2025-07-01&to=2025-07-15
+        [Authorize(Roles = "admin,manager")]
         [HttpGet("date-range")]
         public async Task<ActionResult<ApiResponse<List<ReadSaleDto>>>> GetByDateRangeAsync(DateTime from, DateTime to)
         {
@@ -64,6 +67,19 @@ namespace SalesTrackerAPI.Controllers
             return Ok(ApiResponse<List<ReadSaleDto>>.Ok(sales, APIMessages.SalesRetreived));
         }
 
+        [Authorize(Roles = "admin,manager")]
+        [HttpGet("product-report/{productId}")]
+        public async Task<IActionResult> GetProductSalesReport(int productId)
+        {
+            var report = await _saleService.GetProductSalesReportAsync(productId);
+
+            if (report == null || string.IsNullOrWhiteSpace(report.ProductName))
+                return NotFound(ApiResponse<ProductSalesReportDto>.Fail(APIMessages.ProductNotFound));
+
+            return Ok(ApiResponse<ProductSalesReportDto>.Ok(report, APIMessages.ProductReportGenerated));
+        }
+
+
         // POST: api/sale
         [HttpPost]
         public async Task<ActionResult<ApiResponse<ReadSaleDto>>> CreateAsync([FromBody] CreateSaleDto dto)
@@ -77,6 +93,8 @@ namespace SalesTrackerAPI.Controllers
         }
 
         // PUT: api/sale/return/{saleId}
+
+        [Authorize(Roles = "admin,manager,user")]
         [HttpPost("return/{saleId}")]
         public async Task<ActionResult<ApiResponse<string>>> RecordReturnAsync(int saleId)
         {

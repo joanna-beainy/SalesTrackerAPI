@@ -64,6 +64,14 @@ namespace SalesTracker.InfraStructure.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<List<string>> GetAllCategoriesAsync()
+        {
+            return await _context.Products
+                .Where(p => p.IsActive && !string.IsNullOrEmpty(p.Category))
+                .Select(p => p.Category)
+                .Distinct()
+                .ToListAsync();
+        }
 
         public async Task<IEnumerable<Product>> GetLowStockAsync()
         {

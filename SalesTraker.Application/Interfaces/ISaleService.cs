@@ -11,6 +11,8 @@ namespace SalesTracker.Application.Interfaces
         Task<List<ReadSaleDto>> GetByDateRangeAsync(DateTime from, DateTime to);
         Task<List<ReadSaleDto>> GetByProductIdAsync(int productId);
         Task<List<ReadSaleDto>> GetByUserIdAsync(int userId);
+        Task<ProductSalesReportDto> GetProductSalesReportAsync(int productId);
+
 
         Task<bool> RecordReturnAsync(int saleId);
         Task<bool> MarkAsCompletedAsync(int saleId);

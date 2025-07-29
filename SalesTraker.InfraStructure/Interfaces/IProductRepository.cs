@@ -13,6 +13,8 @@ namespace SalesTracker.InfraStructure.Interfaces
         Task SoftDeleteAsync(int id);
         Task UpdateStockAsync(int id, int newStock);
         Task<IEnumerable<Product>> GetLowStockAsync();
+        Task<List<string>> GetAllCategoriesAsync();
+
         Task<IEnumerable<Product>> SearchAsync(String keyword);
 
         Task BulkInsertAsync(List<Product> products);

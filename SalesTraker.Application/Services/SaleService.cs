@@ -4,6 +4,7 @@ using SalesTracker.Application.Interfaces;
 using SalesTracker.InfraStructure.Interfaces;
 using SalesTracker.InfraStructure.Models.Entities;
 using SalesTracker.InfraStructure.Models.Enums;
+using SalesTracker.InfraStructure.Repositories;
 
 namespace SalesTracker.Application.Services
 {
@@ -32,6 +33,22 @@ namespace SalesTracker.Application.Services
             var sale = await _saleRepo.GetByIdAsync(id);
             return sale == null ? null : _mapper.Map<ReadSaleDto>(sale);
         }
+
+        public async Task<ProductSalesReportDto> GetProductSalesReportAsync(int productId)
+        {
+            var saleItems = await _saleRepo.GetProductSaleItemsAsync(productId);
+
+            var productName = saleItems.FirstOrDefault()?.Product?.Name ?? "Unknown";
+            var quantitySold = saleItems.Sum(si => si.Quantity);
+
+            return new ProductSalesReportDto
+            {
+                ProductId = productId,
+                ProductName = productName,
+                TotalQuantitySold = quantitySold
+            };
+        }
+
 
         public async Task<ReadSaleDto> CreateAsync(CreateSaleDto dto)
         {

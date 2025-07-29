@@ -10,6 +10,8 @@ namespace SalesTracker.Application.Interfaces
         Task UpdateAsync(int id, UpdateProductDto dto);
         Task SoftDeleteAsync(int id);
         Task UpdateStockAsync(int id, UpdateStockDto dto);
+        Task<List<string>> GetAllCategoriesAsync();
+
         Task<IEnumerable<ReadProductDto>> GetLowStockAsync();
         Task<IEnumerable<ReadProductDto>> SearchAsync(string keyword);
     }

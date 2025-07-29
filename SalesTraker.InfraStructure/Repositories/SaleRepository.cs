@@ -53,6 +53,15 @@ namespace SalesTracker.InfraStructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<SaleItem>> GetProductSaleItemsAsync(int productId)
+        {
+            return await _context.SaleItems
+                .Include(si => si.Product)
+                .Where(si => si.ProductId == productId && si.Sale.Status == SaleStatus.Completed)
+                .ToListAsync();
+        }
+
+
         public async Task<List<Sale>> GetByUserIdAsync(int userId)
         {
             return await _context.Sales
@@ -62,6 +71,9 @@ namespace SalesTracker.InfraStructure.Repositories
                     .ThenInclude(si => si.Product)
                 .ToListAsync();
         }
+
+       
+
 
         public async Task CreateAsync(Sale sale)
         {
