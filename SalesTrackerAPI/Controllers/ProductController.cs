@@ -107,5 +107,13 @@ namespace SalesTrackerAPI.Controllers
             return Ok(ApiResponse<List<ReadProductDto>>.Ok(imported));
         }
 
+        [HttpGet("paged")]
+        public async Task<IActionResult> GetPaged([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        {
+            var result = await _productService.GetPaginatedAsync(page, pageSize);
+            return Ok(result);
+        }
+
+
     }
 }

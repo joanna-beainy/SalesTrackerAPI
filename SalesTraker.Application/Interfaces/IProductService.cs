@@ -1,4 +1,5 @@
 ﻿using SalesTracker.Application.DTOs;
+using SalesTracker.Shared.Responses;
 
 namespace SalesTracker.Application.Interfaces
 {
@@ -12,5 +13,7 @@ namespace SalesTracker.Application.Interfaces
         Task UpdateStockAsync(int id, UpdateStockDto dto);
         Task<IEnumerable<ReadProductDto>> GetLowStockAsync();
         Task<IEnumerable<ReadProductDto>> SearchAsync(string keyword);
+        Task<PaginatedResult<ReadProductDto>> GetPaginatedAsync(int page, int pageSize);
+
     }
 }

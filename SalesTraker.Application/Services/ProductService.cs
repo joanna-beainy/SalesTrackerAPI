@@ -5,6 +5,7 @@ using SalesTracker.Application.Interfaces;
 using SalesTracker.InfraStructure.Interfaces;
 using SalesTracker.InfraStructure.Models.Entities;
 using SalesTracker.InfraStructure.Repositories;
+using SalesTracker.Shared.Responses;
 using System.Text.Json;
 
 namespace SalesTracker.Application.Services
@@ -85,5 +86,16 @@ namespace SalesTracker.Application.Services
             var products = await _repo.SearchAsync(keyword);
             return _mapper.Map<IEnumerable<ReadProductDto>>(products);
         }
+
+        public async Task<PaginatedResult<ReadProductDto>> GetPaginatedAsync(int page, int pageSize)
+        {
+            var allProducts = await _repo.GetAllAsync(); 
+            var skip = (page - 1) * pageSize;
+            var items = allProducts.Skip(skip).Take(pageSize);
+            var mapped = _mapper.Map<IEnumerable<ReadProductDto>>(items);
+
+            return new PaginatedResult<ReadProductDto>(mapped, allProducts.Count(), page, pageSize);
+        }
+
     }
 }
