@@ -75,6 +75,10 @@ namespace SalesTracker.Application.Services
             await _redisCache.RemoveAsync("products:all");
         }
 
+        public async Task<List<string>> GetAllCategoriesAsync()
+        {
+            return await _repo.GetAllCategoriesAsync();
+        }
         public async Task<IEnumerable<ReadProductDto>> GetLowStockAsync()
         {
             var products = await _repo.GetLowStockAsync();

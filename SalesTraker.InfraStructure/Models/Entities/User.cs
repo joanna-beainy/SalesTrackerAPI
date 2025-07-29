@@ -13,6 +13,8 @@ namespace SalesTracker.InfraStructure.Models.Entities
         public bool IsActive { get; set; }
 
         public ICollection<Sale> Sales { get; set; }
+
+        public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
     }
 
 }

@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SalesTracker.Application.DTOs;
 using SalesTracker.Application.Interfaces;
 using SalesTracker.Application.Services;
+using SalesTracker.InfraStructure.Models.Entities;
 using SalesTracker.Shared.Constants;
 using SalesTracker.Shared.Responses;
 
@@ -9,6 +11,7 @@ using SalesTracker.Shared.Responses;
 namespace SalesTrackerAPI.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class ProductController : ControllerBase
     {
@@ -22,6 +25,7 @@ namespace SalesTrackerAPI.Controllers
         }
 
         // GET: api/product
+        [Authorize(Roles = "admin, cashier")]
         [HttpGet]
         public async Task<ActionResult<ApiResponse<IEnumerable<ReadProductDto>>>> GetAll()
         {
@@ -34,6 +38,7 @@ namespace SalesTrackerAPI.Controllers
         }
 
         // GET: api/product/{id}
+        [Authorize(Roles = "admin, cashier")]
         [HttpGet("{id}")]
         public async Task<ActionResult<ApiResponse<ReadProductDto>>> GetById(int id)
         {
@@ -44,6 +49,7 @@ namespace SalesTrackerAPI.Controllers
         }
 
         // POST: api/product
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AddProductDto dto)
         {
@@ -52,6 +58,7 @@ namespace SalesTrackerAPI.Controllers
         }
 
         // PUT: api/product/{id}
+        [Authorize(Roles = "admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateProductDto dto)
         {
@@ -60,6 +67,7 @@ namespace SalesTrackerAPI.Controllers
         }
 
         // DELETE: api/product/{id}
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> SoftDelete(int id)
         {
@@ -68,6 +76,7 @@ namespace SalesTrackerAPI.Controllers
         }
 
         // PATCH: api/product/{id}/stock
+        [Authorize(Roles = "admin")]
         [HttpPatch("{id}/stock")]
         public async Task<IActionResult> UpdateStock(int id, [FromBody] UpdateStockDto dto)
         {
@@ -76,6 +85,7 @@ namespace SalesTrackerAPI.Controllers
         }
 
         // GET: api/product/low-stock
+        [Authorize(Roles = "admin,manager")]
         [HttpGet("low-stock")]
         public async Task<ActionResult<ApiResponse<IEnumerable<ReadProductDto>>>> GetLowStock()
         {
@@ -87,8 +97,17 @@ namespace SalesTrackerAPI.Controllers
             return Ok(ApiResponse<IEnumerable<ReadProductDto>>.Ok(products, APIMessages.LowStockRetrieved));
         }
 
+        [HttpGet("categories")]
+        [Authorize(Roles = "admin,cashier,manager")]
+        public async Task<IActionResult> GetCategories()
+        {
+            var categories = await _productService.GetAllCategoriesAsync();
+            return Ok(ApiResponse<List<string>>.Ok(categories, APIMessages.CategorieRetrieved));
+        }
+
 
         // GET: api/product/search?keyword=abc
+        [Authorize(Roles = "admin,manager,user")]
         [HttpGet("search")]
         public async Task<ActionResult<ApiResponse<IEnumerable<ReadProductDto>>>> Search([FromQuery] string keyword)
         {
@@ -99,7 +118,7 @@ namespace SalesTrackerAPI.Controllers
             return Ok(ApiResponse<IEnumerable<ReadProductDto>>.Ok(results, APIMessages.SearchResultsRetrieved));
         }
 
-
+        [Authorize(Roles = "admin")]
         [HttpPost("import-excel")]
         public async Task<IActionResult> ImportExcel(IFormFile file)
         {

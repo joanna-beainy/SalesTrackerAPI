@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Moq;
 using SalesTracker.Application.DTOs;
+using SalesTracker.Application.Interfaces;
 using SalesTracker.Application.Services;
 using SalesTracker.InfraStructure.Interfaces;
 using SalesTracker.InfraStructure.Models.Entities; 
@@ -15,9 +16,12 @@ namespace SalesTracker.Tests.Services
 
         public ProductServiceTests()
         {
-            _repoMock = new Mock<IProductRepository>();
-            _mapperMock = new Mock<IMapper>();
-            _service = new ProductService(_repoMock.Object, _mapperMock.Object);
+            var mockRepo = new Mock<IProductRepository>();
+            var mockMapper = new Mock<IMapper>();
+            var mockRedis = new Mock<IRedisCacheService>();
+
+            var service = new ProductService(mockRepo.Object, mockMapper.Object, mockRedis.Object);
+
         }
 
         [Fact]

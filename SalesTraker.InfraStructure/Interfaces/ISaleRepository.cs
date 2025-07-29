@@ -11,6 +11,8 @@ namespace SalesTracker.InfraStructure.Interfaces
         Task<List<Sale>> GetByDateRangeAsync(DateTime from, DateTime to);
         Task<List<Sale>> GetByProductIdAsync(int productId);
         Task<List<Sale>> GetByUserIdAsync(int userId);
+        Task<List<SaleItem>> GetProductSaleItemsAsync(int productId);
+
 
         Task<bool> RecordReturnAsync(int saleId);
         Task<bool> MarkAsCompletedAsync(int saleId);
