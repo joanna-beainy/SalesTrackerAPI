@@ -3,6 +3,7 @@ using SalesTracker.InfraStructure.Data;
 using SalesTracker.InfraStructure.Interfaces;
 using SalesTracker.InfraStructure.Models.Enums;
 using SalesTracker.InfraStructure.Models.Entities;
+using SalesTracker.InfraStructure.Responses;
 
 namespace SalesTracker.InfraStructure.Repositories
 {
@@ -139,6 +140,17 @@ namespace SalesTracker.InfraStructure.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<DailySalesData?> GetAggregatedSalesByDateAsync(DateTime targetDate)
+        {
+            return _context.DailySalesReport
+                    .FromSqlRaw("EXEC AggregateDailySales @Date = {0}", targetDate)
+                    .AsNoTracking()
+                    .AsEnumerable() 
+                    .FirstOrDefault();
+        }
+
+
 
     }
 

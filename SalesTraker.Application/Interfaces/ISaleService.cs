@@ -13,7 +13,6 @@ namespace SalesTracker.Application.Interfaces
         Task<List<ReadSaleDto>> GetByUserIdAsync(int userId);
         Task<ProductSalesReportDto> GetProductSalesReportAsync(int productId);
 
-
         Task<bool> RecordReturnAsync(int saleId);
         Task<bool> MarkAsCompletedAsync(int saleId);
         Task<bool> CancelAsync(int saleId);

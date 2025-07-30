@@ -1,4 +1,6 @@
 ﻿using SalesTracker.InfraStructure.Models.Entities;
+using SalesTracker.InfraStructure.Responses;
+using System.Threading.Tasks;
 
 namespace SalesTracker.InfraStructure.Interfaces
 {
@@ -13,7 +15,7 @@ namespace SalesTracker.InfraStructure.Interfaces
         Task<List<Sale>> GetByUserIdAsync(int userId);
         Task<List<SaleItem>> GetProductSaleItemsAsync(int productId);
 
-
+        Task<DailySalesData> GetAggregatedSalesByDateAsync(DateTime targetDate);
         Task<bool> RecordReturnAsync(int saleId);
         Task<bool> MarkAsCompletedAsync(int saleId);
         Task<bool> CancelAsync(int saleId);

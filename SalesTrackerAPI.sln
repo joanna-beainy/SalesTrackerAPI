@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesTracker.Shared", "Sale
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesTracker.Tests", "SalesTracker.Tests\SalesTracker.Tests.csproj", "{A930E171-ED20-40A0-A5E6-B4DBC45D8F58}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesTracker.EmailEngine", "SalesTracker.EmailEngine\SalesTracker.EmailEngine.csproj", "{45C027E4-7933-4CB5-AD7E-AAC2D57DF715}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{A930E171-ED20-40A0-A5E6-B4DBC45D8F58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A930E171-ED20-40A0-A5E6-B4DBC45D8F58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A930E171-ED20-40A0-A5E6-B4DBC45D8F58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45C027E4-7933-4CB5-AD7E-AAC2D57DF715}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45C027E4-7933-4CB5-AD7E-AAC2D57DF715}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45C027E4-7933-4CB5-AD7E-AAC2D57DF715}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45C027E4-7933-4CB5-AD7E-AAC2D57DF715}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

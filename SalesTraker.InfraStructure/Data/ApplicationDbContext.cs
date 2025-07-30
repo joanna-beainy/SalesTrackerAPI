@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SalesTracker.InfraStructure.Models.Entities;
+using SalesTracker.InfraStructure.Responses;
 namespace SalesTracker.InfraStructure.Data
 {
     public class ApplicationDbContext : DbContext
@@ -14,5 +15,15 @@ namespace SalesTracker.InfraStructure.Data
         public DbSet<Role> Roles { get; set; }
 
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<DailySalesData> DailySalesReport { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<DailySalesData>().HasNoKey();
+        }
+
     }
-}
+   
+    }

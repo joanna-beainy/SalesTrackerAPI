@@ -30,6 +30,7 @@ namespace SalesTracker.Shared.Constants
         public const string SaleReturned = "Sale returned successfully.";
         public const string SaleCreated = "Sale created successfully.";
         public const string InvalidSale = "Invalid sale data.";
+        public const string SalesReportGenerated = "Daily sales report generated successfully.";
 
 
         public const string TokenRefreshed = "Access token successfully refreshed.";

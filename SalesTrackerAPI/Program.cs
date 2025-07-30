@@ -81,8 +81,6 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 });
 
 
-
-
 builder.Services.AddAutoMapper(typeof(Program));
 
 
