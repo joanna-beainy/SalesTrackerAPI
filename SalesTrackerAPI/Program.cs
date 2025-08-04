@@ -12,10 +12,23 @@ using SalesTrackerAPI.Middlewares;
 using StackExchange.Redis;
 using System.Security.Claims;
 using System.Text;
+using Serilog;
+
+Log.Logger = new LoggerConfiguration()
+    .Enrich.WithThreadId()
+    .Enrich.WithEnvironmentName()
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .WriteTo.Seq("http://localhost:5341")
+    .CreateLogger();
 
 
+Log.Information("?? Logging to Seq is live!");
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog();
 
 // Add services to the container.
 
@@ -129,7 +142,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 
