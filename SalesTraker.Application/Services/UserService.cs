@@ -1,107 +1,117 @@
 ﻿using AutoMapper;
-using BCrypt.Net;
-using OfficeOpenXml.Packaging.Ionic.Zip;
+using Microsoft.Extensions.Logging;
 using SalesTracker.Application.DTOs;
 using SalesTracker.Application.Interfaces;
 using SalesTracker.InfraStructure.Interfaces;
 using SalesTracker.InfraStructure.Models.Entities;
 using SalesTracker.Shared.Constants;
 using SalesTracker.Shared.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SalesTracker.Application.Services
+public class UserService : IUserService
 {
-    public class UserService : IUserService
+    private readonly IUserRepository _userRepo;
+    private readonly IRefreshTokenRepository _refreshTokenRepo;
+    private readonly ITokenService _tokenService;
+    private readonly IMapper _mapper;
+    private readonly ILogger<UserService> _logger;
+
+    public UserService(IUserRepository userRepo, IRefreshTokenRepository refreshTokenRepo, ITokenService tokenService, IMapper mapper, ILogger<UserService> logger)
     {
-        private readonly IUserRepository _userRepo;
-        private readonly IRefreshTokenRepository _refreshTokenRepo;
-        private readonly ITokenService _tokenService;
-        private readonly IMapper _mapper;
+        _userRepo = userRepo;
+        _refreshTokenRepo = refreshTokenRepo;
+        _tokenService = tokenService;
+        _mapper = mapper;
+        _logger = logger;
+    }
 
-        public UserService(IUserRepository userRepo, IRefreshTokenRepository refreshTokenRepo, ITokenService tokenService, IMapper mapper )
+    public async Task<ReadUserDto> RegisterAsync(RegisterDto dto)
+    {
+        _logger.LogInformation("Checking if username exists: {Username}", dto.Username);
+        if (await _userRepo.UsernameExistsAsync(dto.Username))
         {
-            this._userRepo = userRepo;
-            this._refreshTokenRepo = refreshTokenRepo;
-            this._tokenService = tokenService;
-            this._mapper = mapper;
-
+            _logger.LogWarning(APIMessages.UsernameTaken);
         }
 
-        public async Task<ReadUserDto> RegisterAsync(RegisterDto dto)
+        var user = _mapper.Map<User>(dto);
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+        user.IsActive = true;
+
+        var created = await _userRepo.AddAsync(user);
+        _logger.LogInformation("User created successfully: {UserId}", created.Id);
+
+        return _mapper.Map<ReadUserDto>(created);
+    }
+
+    public async Task<TokenResponseDto?> LoginAsync(LoginDto dto)
+    {
+        _logger.LogInformation("Attempting login for user: {Username}", dto.Username);
+
+        var user = await _userRepo.GetByUsernameAsync(dto.Username);
+        if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
         {
-            if (await _userRepo.UsernameExistsAsync(dto.Username))
-                throw new Exception("Username already exists");
-
-            var user = _mapper.Map<User>(dto);
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-            user.IsActive = true;
-
-            var created = await _userRepo.AddAsync(user);
-            return _mapper.Map<ReadUserDto>(created);
+            _logger.LogWarning("Login failed — invalid credentials for user: {Username}", dto.Username);
+            return null;
         }
 
-        public async Task<TokenResponseDto?> LoginAsync(LoginDto dto)
+        var accessToken = _tokenService.CreateAccessToken(user);
+        var tokenEntity = _tokenService.CreateRefreshTokenEntity(user.Id);
+
+        await _refreshTokenRepo.AddAsync(tokenEntity);
+
+        _logger.LogInformation("Login successful — token generated for user: {Username}", dto.Username);
+
+        return new TokenResponseDto
         {
-            var user = await _userRepo.GetByUsernameAsync(dto.Username);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
-                return null;
+            AccessToken = accessToken,
+            RefreshToken = tokenEntity.Token
+        };
+    }
 
-            var accessToken = _tokenService.CreateAccessToken(user);
-            var tokenEntity = _tokenService.CreateRefreshTokenEntity(user.Id);
+    public async Task<TokenResponseDto?> RefreshTokenAsync(string refreshToken)
+    {
+        _logger.LogInformation("Validating refresh token");
 
-
-            await _refreshTokenRepo.AddAsync(tokenEntity);
-
-            return new TokenResponseDto
-            {
-                AccessToken = accessToken,
-                RefreshToken = tokenEntity.Token
-            };
+        var tokenEntity = await _refreshTokenRepo.GetValidTokenAsync(refreshToken);
+        if (tokenEntity == null)
+        {
+            _logger.LogWarning("Refresh token invalid or expired");
+            throw new AppException(APIMessages.ExpiredOrInvalidToken);
         }
 
-        public async Task<TokenResponseDto?> RefreshTokenAsync(string refreshToken)
+        var user = await _userRepo.GetByIdAsync(tokenEntity.UserId);
+        if (user == null)
         {
-            var tokenEntity = await _refreshTokenRepo.GetValidTokenAsync(refreshToken);
-            if (tokenEntity == null)
-                throw new AppException(APIMessages.ExpiredOrInvalidToken);
-
-            var user = await _userRepo.GetByIdAsync(tokenEntity.UserId);
-            if (user == null)
-                throw new AppException(APIMessages.UnauthorizedAccess);
-
-            var accessToken = _tokenService.CreateAccessToken(user);
-
-            tokenEntity.UsageCount++;
-
-            string refreshTokenToReturn;
-
-            if (tokenEntity.UsageCount >= tokenEntity.MaxUsageCount)
-            {
-                // Revoke and rotate
-                tokenEntity.IsRevoked = true;
-
-                var newTokenEntity = _tokenService.CreateRefreshTokenEntity(user.Id);
-                await _refreshTokenRepo.AddAsync(newTokenEntity);
-
-                refreshTokenToReturn = newTokenEntity.Token;
-            }
-            else
-            {
-                // Reuse same refresh token
-                refreshTokenToReturn = tokenEntity.Token;
-            }
-            await _refreshTokenRepo.UpdateAsync(tokenEntity);
-
-            return new TokenResponseDto
-            {
-                AccessToken = accessToken,
-                RefreshToken = refreshTokenToReturn
-            };
+            _logger.LogError("User not found for refresh token. ID: {UserId}", tokenEntity.UserId);
+            throw new AppException(APIMessages.UnauthorizedAccess);
         }
 
+        var accessToken = _tokenService.CreateAccessToken(user);
+        tokenEntity.UsageCount++;
+
+        string refreshTokenToReturn;
+
+        if (tokenEntity.UsageCount >= tokenEntity.MaxUsageCount)
+        {
+            _logger.LogInformation("Rotating refresh token for user ID {UserId}", user.Id);
+            tokenEntity.IsRevoked = true;
+
+            var newTokenEntity = _tokenService.CreateRefreshTokenEntity(user.Id);
+            await _refreshTokenRepo.AddAsync(newTokenEntity);
+            refreshTokenToReturn = newTokenEntity.Token;
+        }
+        else
+        {
+            _logger.LogInformation("Reusing existing refresh token for user ID {UserId}", user.Id);
+            refreshTokenToReturn = tokenEntity.Token;
+        }
+
+        await _refreshTokenRepo.UpdateAsync(tokenEntity);
+        _logger.LogInformation("Refresh token update complete for user ID {UserId}", user.Id);
+
+        return new TokenResponseDto
+        {
+            AccessToken = accessToken,
+            RefreshToken = refreshTokenToReturn
+        };
     }
 }

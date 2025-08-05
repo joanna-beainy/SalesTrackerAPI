@@ -1,15 +1,16 @@
 ﻿using SalesTracker.Shared.Constants;
 using SalesTracker.Shared.Exceptions;
 using SalesTracker.Shared.Responses;
+using Serilog;
 using System.Text.Json;
 
 namespace SalesTrackerAPI.Middlewares
 {
-    public class ExceptionMiddleware
+    public class GlobalExceptionMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public ExceptionMiddleware(RequestDelegate next)
+        public GlobalExceptionMiddleware(RequestDelegate next)
         {
             _next = next;
         }
@@ -29,8 +30,10 @@ namespace SalesTrackerAPI.Middlewares
                 var json = JsonSerializer.Serialize(response);
                 await context.Response.WriteAsync(json);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Log.Error(ex, "Unhandled exception caught by GlobalExceptionMiddleware");
+
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
@@ -38,6 +41,7 @@ namespace SalesTrackerAPI.Middlewares
                 var json = JsonSerializer.Serialize(response);
                 await context.Response.WriteAsync(json);
             }
+
         }
     }
 
