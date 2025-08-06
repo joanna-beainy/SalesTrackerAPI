@@ -22,6 +22,8 @@ namespace SalesTracker.InfraStructure.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<DailySalesData>().HasNoKey();
+            modelBuilder.Ignore<DailySalesData>();
+
         }
 
     }

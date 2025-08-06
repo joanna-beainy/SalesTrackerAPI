@@ -12,6 +12,7 @@
 
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
+        public double DiscountPercentage { get; set; }
     }
 
 }

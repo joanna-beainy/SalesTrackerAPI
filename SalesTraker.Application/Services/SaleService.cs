@@ -27,6 +27,11 @@ namespace SalesTracker.Application.Services
             return _mapper.Map<List<ReadSaleDto>>(Sales);
         }
 
+        public async Task<List<ReadSaleV2Dto>> GetAllV2Async()
+        {
+            var sales = await _saleRepo.GetAllAsync();
+            return _mapper.Map<List<ReadSaleV2Dto>>(sales);
+        }
 
         public async Task<ReadSaleDto?> GetByIdAsync(int id)
         {
@@ -72,6 +77,7 @@ namespace SalesTracker.Application.Services
                 // Map SaleItem and enrich with UnitPrice
                 var saleItem = _mapper.Map<SaleItem>(itemDto);
                 saleItem.UnitPrice = product.Price;
+                saleItem.DiscountPercentage = itemDto.DiscountPercentage;
 
                 sale.SaleItems.Add(saleItem);
                 total += saleItem.UnitPrice * saleItem.Quantity;
