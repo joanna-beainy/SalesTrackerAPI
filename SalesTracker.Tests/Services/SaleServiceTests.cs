@@ -19,7 +19,7 @@ namespace SalesTracker.Tests.Services
 
         public SaleServiceTests()
         {
-            _saleService = new SaleService(_saleRepoMock.Object, _productServiceMock.Object, _mapperMock.Object);
+            _saleService = new SaleService(_saleRepoMock.Object, _productServiceMock.Object, _mapperMock.Object,null);
         }
 
         [Fact]
