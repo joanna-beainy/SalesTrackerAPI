@@ -10,7 +10,8 @@ namespace SalesTrackerAPI.Controllers
 {
     [ApiController]
     [Authorize]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/sale")]
     public class SaleController : ControllerBase
     {
         private readonly ISaleService _saleService;

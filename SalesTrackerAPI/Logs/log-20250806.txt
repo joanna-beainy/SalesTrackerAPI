@@ -1,0 +1,376 @@
+2025-08-06 18:44:57.017 +03:00 [INF] ?? Logging to Seq is live!
+2025-08-06 18:44:58.874 +03:00 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:44:58.879 +03:00 [WRN] No store type was specified for the decimal property 'TotalAmount' on entity type 'Sale'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:44:58.882 +03:00 [WRN] No store type was specified for the decimal property 'UnitPrice' on entity type 'SaleItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:44:58.884 +03:00 [WRN] No store type was specified for the decimal property 'TotalSales' on entity type 'DailySalesData'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:44:59.376 +03:00 [INF] Executed DbCommand (12ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-08-06 18:44:59.391 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-08-06 18:44:59.417 +03:00 [INF] Executed DbCommand (20ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-08-06 18:44:59.491 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-08-06 18:44:59.505 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-08-06 18:44:59.512 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-08-06 18:44:59.521 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-08-06 18:44:59.530 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-08-06 18:44:59.537 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-08-06 18:44:59.801 +03:00 [INF] Executed DbCommand (23ms) [Parameters=[@__role_Name_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Roles] AS [r]
+        WHERE [r].[Name] = @__role_Name_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-08-06 18:44:59.830 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__role_Name_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Roles] AS [r]
+        WHERE [r].[Name] = @__role_Name_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-08-06 18:44:59.837 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__role_Name_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Roles] AS [r]
+        WHERE [r].[Name] = @__role_Name_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-08-06 18:44:59.842 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__role_Name_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Roles] AS [r]
+        WHERE [r].[Name] = @__role_Name_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-08-06 18:45:00.022 +03:00 [INF] User profile is available. Using 'C:\Users\joann\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-08-06 18:45:00.251 +03:00 [INF] Now listening on: https://localhost:7205
+2025-08-06 18:45:00.253 +03:00 [INF] Now listening on: http://localhost:5005
+2025-08-06 18:45:00.329 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-08-06 18:45:00.332 +03:00 [INF] Hosting environment: Development
+2025-08-06 18:45:00.335 +03:00 [INF] Content root path: C:\Users\joann\source\repos\SalesTrackerAPI\SalesTrackerAPI
+2025-08-06 18:45:01.823 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7205/swagger/index.html - null null
+2025-08-06 18:45:01.985 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7205/swagger/index.html - 200 null text/html;charset=utf-8 174.2852ms
+2025-08-06 18:45:01.995 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7205/_framework/aspnetcore-browser-refresh.js - null null
+2025-08-06 18:45:02.007 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7205/_framework/aspnetcore-browser-refresh.js - 200 16515 application/javascript; charset=utf-8 11.6419ms
+2025-08-06 18:45:02.016 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7205/_vs/browserLink - null null
+2025-08-06 18:45:02.057 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7205/_vs/browserLink - 200 null text/javascript; charset=UTF-8 41.7169ms
+2025-08-06 18:45:02.115 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7205/swagger/v1/swagger.json - null null
+2025-08-06 18:45:02.141 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7205/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 26.7532ms
+2025-08-06 18:46:58.894 +03:00 [INF] ?? Logging to Seq is live!
+2025-08-06 18:47:00.241 +03:00 [WRN] The entity type 'DailySalesData' was first mapped explicitly and then ignored. Consider not mapping the entity type in the first place.
+2025-08-06 18:47:00.354 +03:00 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:47:00.356 +03:00 [WRN] No store type was specified for the decimal property 'TotalAmount' on entity type 'Sale'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:47:00.357 +03:00 [WRN] No store type was specified for the decimal property 'UnitPrice' on entity type 'SaleItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:47:00.493 +03:00 [WRN] The entity type 'DailySalesData' was first mapped explicitly and then ignored. Consider not mapping the entity type in the first place.
+2025-08-06 18:47:00.501 +03:00 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:47:00.505 +03:00 [WRN] No store type was specified for the decimal property 'TotalAmount' on entity type 'Sale'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:47:00.507 +03:00 [WRN] No store type was specified for the decimal property 'UnitPrice' on entity type 'SaleItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:49:17.608 +03:00 [INF] ?? Logging to Seq is live!
+2025-08-06 18:49:18.194 +03:00 [WRN] The entity type 'DailySalesData' was first mapped explicitly and then ignored. Consider not mapping the entity type in the first place.
+2025-08-06 18:49:18.282 +03:00 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:49:18.282 +03:00 [WRN] No store type was specified for the decimal property 'TotalAmount' on entity type 'Sale'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:49:18.283 +03:00 [WRN] No store type was specified for the decimal property 'UnitPrice' on entity type 'SaleItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:49:28.898 +03:00 [INF] ?? Logging to Seq is live!
+2025-08-06 18:49:30.165 +03:00 [WRN] The entity type 'DailySalesData' was first mapped explicitly and then ignored. Consider not mapping the entity type in the first place.
+2025-08-06 18:49:30.279 +03:00 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:49:30.285 +03:00 [WRN] No store type was specified for the decimal property 'TotalAmount' on entity type 'Sale'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:49:30.286 +03:00 [WRN] No store type was specified for the decimal property 'UnitPrice' on entity type 'SaleItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:49:30.690 +03:00 [INF] Executed DbCommand (24ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-08-06 18:49:30.705 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-08-06 18:49:30.732 +03:00 [INF] Executed DbCommand (25ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-08-06 18:49:30.810 +03:00 [INF] Executed DbCommand (25ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-08-06 18:49:30.819 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-08-06 18:49:30.822 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-08-06 18:49:30.835 +03:00 [INF] Executed DbCommand (10ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-08-06 18:49:30.843 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-08-06 18:49:30.878 +03:00 [INF] Executed DbCommand (33ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-08-06 18:49:31.134 +03:00 [INF] Executed DbCommand (20ms) [Parameters=[@__role_Name_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Roles] AS [r]
+        WHERE [r].[Name] = @__role_Name_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-08-06 18:49:31.142 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__role_Name_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Roles] AS [r]
+        WHERE [r].[Name] = @__role_Name_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-08-06 18:49:31.146 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__role_Name_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Roles] AS [r]
+        WHERE [r].[Name] = @__role_Name_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-08-06 18:49:31.149 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__role_Name_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Roles] AS [r]
+        WHERE [r].[Name] = @__role_Name_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-08-06 18:49:31.328 +03:00 [INF] User profile is available. Using 'C:\Users\joann\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-08-06 18:49:31.509 +03:00 [INF] Now listening on: https://localhost:7205
+2025-08-06 18:49:31.512 +03:00 [INF] Now listening on: http://localhost:5005
+2025-08-06 18:49:31.609 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-08-06 18:49:31.612 +03:00 [INF] Hosting environment: Development
+2025-08-06 18:49:31.614 +03:00 [INF] Content root path: C:\Users\joann\source\repos\SalesTrackerAPI\SalesTrackerAPI
+2025-08-06 18:49:32.106 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7205/swagger/index.html - null null
+2025-08-06 18:49:32.268 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7205/swagger/index.html - 200 null text/html;charset=utf-8 177.3175ms
+2025-08-06 18:49:32.274 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7205/_framework/aspnetcore-browser-refresh.js - null null
+2025-08-06 18:49:32.292 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7205/_framework/aspnetcore-browser-refresh.js - 200 16515 application/javascript; charset=utf-8 18.1553ms
+2025-08-06 18:49:32.300 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7205/_vs/browserLink - null null
+2025-08-06 18:49:32.348 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7205/_vs/browserLink - 200 null text/javascript; charset=UTF-8 48.8503ms
+2025-08-06 18:49:32.528 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7205/swagger/v1/swagger.json - null null
+2025-08-06 18:49:32.561 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7205/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 32.9053ms
+2025-08-06 18:50:22.467 +03:00 [INF] ?? Logging to Seq is live!
+2025-08-06 18:50:23.117 +03:00 [WRN] The entity type 'DailySalesData' was first mapped explicitly and then ignored. Consider not mapping the entity type in the first place.
+2025-08-06 18:50:23.210 +03:00 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:50:23.210 +03:00 [WRN] No store type was specified for the decimal property 'TotalAmount' on entity type 'Sale'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:50:23.210 +03:00 [WRN] No store type was specified for the decimal property 'UnitPrice' on entity type 'SaleItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:50:37.037 +03:00 [INF] ?? Logging to Seq is live!
+2025-08-06 18:50:38.585 +03:00 [WRN] The entity type 'DailySalesData' was first mapped explicitly and then ignored. Consider not mapping the entity type in the first place.
+2025-08-06 18:50:38.729 +03:00 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:50:38.732 +03:00 [WRN] No store type was specified for the decimal property 'TotalAmount' on entity type 'Sale'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:50:38.734 +03:00 [WRN] No store type was specified for the decimal property 'UnitPrice' on entity type 'SaleItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:50:39.182 +03:00 [INF] Executed DbCommand (13ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-08-06 18:50:39.197 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-08-06 18:50:39.224 +03:00 [INF] Executed DbCommand (23ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-08-06 18:50:39.290 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-08-06 18:50:39.301 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-08-06 18:50:39.305 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-08-06 18:50:39.314 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-08-06 18:50:39.322 +03:00 [INF] Applying migration '20250806155023_AddDiscountPercentageToSalesItem'.
+2025-08-06 18:50:39.337 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20250806155023_AddDiscountPercentageToSalesItem', N'9.0.7');
+2025-08-06 18:50:39.348 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-08-06 18:50:39.616 +03:00 [INF] Executed DbCommand (20ms) [Parameters=[@__role_Name_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Roles] AS [r]
+        WHERE [r].[Name] = @__role_Name_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-08-06 18:50:39.626 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__role_Name_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Roles] AS [r]
+        WHERE [r].[Name] = @__role_Name_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-08-06 18:50:39.630 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__role_Name_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Roles] AS [r]
+        WHERE [r].[Name] = @__role_Name_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-08-06 18:50:39.632 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__role_Name_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Roles] AS [r]
+        WHERE [r].[Name] = @__role_Name_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-08-06 18:50:39.800 +03:00 [INF] User profile is available. Using 'C:\Users\joann\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-08-06 18:50:39.982 +03:00 [INF] Now listening on: https://localhost:7205
+2025-08-06 18:50:39.985 +03:00 [INF] Now listening on: http://localhost:5005
+2025-08-06 18:50:40.071 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-08-06 18:50:40.073 +03:00 [INF] Hosting environment: Development
+2025-08-06 18:50:40.074 +03:00 [INF] Content root path: C:\Users\joann\source\repos\SalesTrackerAPI\SalesTrackerAPI
+2025-08-06 18:50:40.741 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7205/swagger/index.html - null null
+2025-08-06 18:50:40.883 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7205/swagger/index.html - 200 null text/html;charset=utf-8 150.3742ms
+2025-08-06 18:50:40.890 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7205/_framework/aspnetcore-browser-refresh.js - null null
+2025-08-06 18:50:40.905 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7205/_framework/aspnetcore-browser-refresh.js - 200 16515 application/javascript; charset=utf-8 14.7683ms
+2025-08-06 18:50:40.920 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7205/_vs/browserLink - null null
+2025-08-06 18:50:40.970 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7205/_vs/browserLink - 200 null text/javascript; charset=UTF-8 51.1027ms
+2025-08-06 18:50:41.022 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7205/swagger/v1/swagger.json - null null
+2025-08-06 18:50:41.058 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7205/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 36.3484ms
+2025-08-06 18:53:03.359 +03:00 [INF] ?? Logging to Seq is live!
+2025-08-06 18:53:03.943 +03:00 [WRN] The entity type 'DailySalesData' was first mapped explicitly and then ignored. Consider not mapping the entity type in the first place.
+2025-08-06 18:53:04.033 +03:00 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:53:04.033 +03:00 [WRN] No store type was specified for the decimal property 'TotalAmount' on entity type 'Sale'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:53:04.033 +03:00 [WRN] No store type was specified for the decimal property 'UnitPrice' on entity type 'SaleItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:53:04.309 +03:00 [INF] Executed DbCommand (12ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-08-06 18:53:04.316 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-08-06 18:53:04.332 +03:00 [INF] Executed DbCommand (15ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-08-06 18:53:04.379 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-08-06 18:53:04.384 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-08-06 18:53:04.385 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-08-06 18:53:04.388 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-08-06 18:53:04.393 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-08-06 18:53:04.398 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-08-06 18:53:14.978 +03:00 [INF] ?? Logging to Seq is live!
+2025-08-06 18:53:16.618 +03:00 [WRN] The entity type 'DailySalesData' was first mapped explicitly and then ignored. Consider not mapping the entity type in the first place.
+2025-08-06 18:53:16.733 +03:00 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:53:16.738 +03:00 [WRN] No store type was specified for the decimal property 'TotalAmount' on entity type 'Sale'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:53:16.739 +03:00 [WRN] No store type was specified for the decimal property 'UnitPrice' on entity type 'SaleItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-08-06 18:53:17.130 +03:00 [INF] Executed DbCommand (12ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-08-06 18:53:17.146 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-08-06 18:53:17.162 +03:00 [INF] Executed DbCommand (11ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-08-06 18:53:17.218 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-08-06 18:53:17.229 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-08-06 18:53:17.232 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-08-06 18:53:17.236 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-08-06 18:53:17.243 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-08-06 18:53:17.245 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-08-06 18:53:17.487 +03:00 [INF] Executed DbCommand (39ms) [Parameters=[@__role_Name_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Roles] AS [r]
+        WHERE [r].[Name] = @__role_Name_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-08-06 18:53:17.495 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__role_Name_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Roles] AS [r]
+        WHERE [r].[Name] = @__role_Name_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-08-06 18:53:17.498 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__role_Name_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Roles] AS [r]
+        WHERE [r].[Name] = @__role_Name_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-08-06 18:53:17.500 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__role_Name_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Roles] AS [r]
+        WHERE [r].[Name] = @__role_Name_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-08-06 18:53:17.632 +03:00 [INF] User profile is available. Using 'C:\Users\joann\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-08-06 18:53:17.805 +03:00 [INF] Now listening on: https://localhost:7205
+2025-08-06 18:53:17.806 +03:00 [INF] Now listening on: http://localhost:5005
+2025-08-06 18:53:17.889 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-08-06 18:53:17.891 +03:00 [INF] Hosting environment: Development
+2025-08-06 18:53:17.893 +03:00 [INF] Content root path: C:\Users\joann\source\repos\SalesTrackerAPI\SalesTrackerAPI
+2025-08-06 18:53:18.645 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7205/swagger/index.html - null null
+2025-08-06 18:53:18.810 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7205/swagger/index.html - 200 null text/html;charset=utf-8 178.2448ms
+2025-08-06 18:53:18.824 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7205/_framework/aspnetcore-browser-refresh.js - null null
+2025-08-06 18:53:18.847 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7205/_framework/aspnetcore-browser-refresh.js - 200 16515 application/javascript; charset=utf-8 23.4606ms
+2025-08-06 18:53:18.849 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7205/_vs/browserLink - null null
+2025-08-06 18:53:18.921 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7205/_vs/browserLink - 200 null text/javascript; charset=UTF-8 71.9021ms
+2025-08-06 18:53:18.971 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7205/swagger/v1/swagger.json - null null
+2025-08-06 18:53:19.047 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7205/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 76.5178ms
