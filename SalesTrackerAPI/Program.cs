@@ -156,7 +156,7 @@ builder.Services.Configure<AuthenticationSettings>(
 
 var app = builder.Build();
 
-Apply migrations
+//Apply migrations
 using (var scope = app.Services.CreateScope())
 {
    var services = scope.ServiceProvider;
