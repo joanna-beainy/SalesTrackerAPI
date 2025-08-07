@@ -16,6 +16,7 @@ namespace SalesTracker.Shared.Constants
         public const string SearchResultsRetrieved = "Search results retrieved successfully";
         public const string CategorieRetrieved = "Product categories retrieved successfully.";
         public const string ProductReportGenerated = "Product sales report generated successfully.";
+        public const string ProductImported = "Excel import successful";
 
         public static string SearchKeywordNotFound(string keyword) => $"No products found matching '{keyword}'.";
 

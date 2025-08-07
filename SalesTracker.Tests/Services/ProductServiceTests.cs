@@ -20,7 +20,7 @@ namespace SalesTracker.Tests.Services
             var mockMapper = new Mock<IMapper>();
             var mockRedis = new Mock<IRedisCacheService>();
 
-            var service = new ProductService(mockRepo.Object, mockMapper.Object, mockRedis.Object);
+            var service = new ProductService(mockRepo.Object, mockMapper.Object, mockRedis.Object,null);
 
         }
 
