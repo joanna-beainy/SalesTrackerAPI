@@ -30,22 +30,38 @@ namespace SalesTracker.Application.Services
             _logger.LogInformation("Retrieving all products");
 
             const string cacheKey = "products:all";
-            var cached = await _redisCache.GetAsync<IEnumerable<ReadProductDto>>(cacheKey);
+            IEnumerable<ReadProductDto> cached = null;
 
-            if (cached != null)
+            try
             {
-                _logger.LogInformation("Retrieved products from cache");
-                return cached;
+                cached = await _redisCache.GetAsync<IEnumerable<ReadProductDto>>(cacheKey);
+                if (cached != null)
+                {
+                    _logger.LogInformation("Retrieved products from cache");
+                    return cached;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning("Redis unavailable. Falling back to database. Error: {Message}", ex.Message);
             }
 
             var products = await _repo.GetAllAsync();
             var mapped = _mapper.Map<IEnumerable<ReadProductDto>>(products);
 
-            await _redisCache.SetAsync(cacheKey, mapped, TimeSpan.FromMinutes(5));
-            _logger.LogInformation("Products cached successfully");
+            try
+            {
+                await _redisCache.SetAsync(cacheKey, mapped, TimeSpan.FromMinutes(5));
+                _logger.LogInformation("Products cached successfully");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning("Failed to cache products. Redis might still be down. Error: {Message}", ex.Message);
+            }
 
             return mapped;
         }
+
 
 
         public async Task<ReadProductDto?> GetByIdAsync(int id)
