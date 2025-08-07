@@ -14,7 +14,10 @@ using System.Security.Claims;
 using System.Text;
 
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    EnvironmentName = Environments.Development // Forces Development mode
+});
 
 // Add services to the container.
 
