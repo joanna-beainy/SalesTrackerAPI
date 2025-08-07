@@ -27,9 +27,12 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 
-Log.Information("?? Logging to Seq is live!");
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    EnvironmentName = Environments.Development // Forces Development mode
+});
 
-var builder = WebApplication.CreateBuilder(args);
+Log.Information("?? Logging to Seq is live!");
 
 builder.Host.UseSerilog();
 
@@ -107,7 +110,6 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ISaleRepository, SaleRepository>();
 builder.Services.AddScoped<ISaleService, SaleService>();
 builder.Services.AddScoped<IExcelImportService, ExcelImportService>();
-builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -154,15 +156,15 @@ builder.Services.Configure<AuthenticationSettings>(
 
 var app = builder.Build();
 
-// Apply migrations
+//Apply migrations
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<ApplicationDbContext>();
-    context.Database.Migrate();
+   var services = scope.ServiceProvider;
+   var context = services.GetRequiredService<ApplicationDbContext>();
+   context.Database.Migrate();
 
-    // Seed initial roles
-    SeedData.Initialize(services);
+   // Seed initial roles
+   SeedData.Initialize(services);
 }
 
 
@@ -180,9 +182,11 @@ if (app.Environment.IsDevelopment())
         }
     });
 }
+
+
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();

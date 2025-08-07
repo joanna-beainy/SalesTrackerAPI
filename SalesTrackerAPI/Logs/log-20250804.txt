@@ -357,3 +357,4 @@ WHERE [Id] = @p6;
 2025-08-04 11:40:43.453 +03:00 [INF] Executed action AuthController.Refresh (SalesTrackerAPI) in 866.819ms
 2025-08-04 11:40:43.457 +03:00 [INF] Executed endpoint 'AuthController.Refresh (SalesTrackerAPI)'
 2025-08-04 11:40:43.468 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7205/api/auth/refresh - 200 null application/json; charset=utf-8 1032.3177ms
+
