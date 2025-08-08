@@ -19,6 +19,7 @@ Thumbs.db
 # Logs and crash dumps
 *.log
 *.pid
+Logs/
 
 # Secrets and environment files
 appsettings.Development.json
