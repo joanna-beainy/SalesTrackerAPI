@@ -1,4 +1,5 @@
-﻿using SalesTracker.Application.DTOs;
+﻿using Microsoft.AspNetCore.Http;
+using SalesTracker.Application.DTOs;
 using SalesTracker.Shared.Responses;
 
 namespace SalesTracker.Application.Interfaces
@@ -16,6 +17,8 @@ namespace SalesTracker.Application.Interfaces
         Task<IEnumerable<ReadProductDto>> GetLowStockAsync();
         Task<IEnumerable<ReadProductDto>> SearchAsync(string keyword);
         Task<PaginatedResult<ReadProductDto>> GetPaginatedAsync(int page, int pageSize);
+
+        Task<ReadProductDto?> UploadProductImageAsync(int productId, IFormFile file);
 
     }
 }

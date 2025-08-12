@@ -64,6 +64,15 @@ namespace SalesTracker.InfraStructure.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task UpdateImageAsync(int id, string imageUrl)
+        {
+            var product = await _context.Products.FindAsync(id);
+            if (product == null || !product.IsActive) return;
+
+            product.ImageUrl = imageUrl;
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<List<string>> GetAllCategoriesAsync()
         {
             return await _context.Products

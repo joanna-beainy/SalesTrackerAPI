@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Moq;
 using SalesTracker.Application.DTOs;
 using SalesTracker.Application.Interfaces;
@@ -12,16 +13,26 @@ namespace SalesTracker.Tests.Services
     {
         private readonly Mock<IProductRepository> _repoMock;
         private readonly Mock<IMapper> _mapperMock;
+        private readonly Mock<IRedisCacheService> _redisMock;
+        private readonly Mock<ILogger<ProductService>> _loggerMock;
+        private readonly Mock<IAzureBlobStorageService> _blobStorageMock;
         private readonly ProductService _service;
 
         public ProductServiceTests()
         {
-            var mockRepo = new Mock<IProductRepository>();
-            var mockMapper = new Mock<IMapper>();
-            var mockRedis = new Mock<IRedisCacheService>();
+            _repoMock = new Mock<IProductRepository>();
+            _mapperMock = new Mock<IMapper>();
+            _redisMock = new Mock<IRedisCacheService>();
+            _loggerMock = new Mock<ILogger<ProductService>>();
+            _blobStorageMock = new Mock<IAzureBlobStorageService>();
 
-            var service = new ProductService(mockRepo.Object, mockMapper.Object, mockRedis.Object,null);
-
+            _service = new ProductService(
+                _repoMock.Object,
+                _mapperMock.Object,
+                _redisMock.Object,
+                _loggerMock.Object,
+                _blobStorageMock.Object
+            );
         }
 
         [Fact]
@@ -99,18 +110,25 @@ namespace SalesTracker.Tests.Services
 
 
         [Fact]
-        public async Task SoftDeleteAsync_ShouldCallRepositorySoftDeleteOnce()
+        public async Task SoftDeleteAsync_ShouldDeleteBlobAndUpdateProduct()
         {
-            // Arrange
             var productId = 1;
+            var imageUrl = "https://storage.blob.core.windows.net/images/products/1/image.jpg";
+            var blobPath = "products/1/image.jpg";
 
-            _repoMock.Setup(r => r.SoftDeleteAsync(productId)).Returns(Task.CompletedTask);
+            var product = new Product { Id = productId, Name = "Keyboard", IsActive = true, ImageUrl = imageUrl };
 
-            // Act
+            _repoMock.Setup(r => r.GetByIdAsync(productId)).ReturnsAsync(product);
+            _blobStorageMock.Setup(b => b.ExtractBlobPath(imageUrl)).Returns(blobPath);
+            _blobStorageMock.Setup(b => b.DeleteAsync(blobPath)).Returns(Task.CompletedTask);
+            _repoMock.Setup(r => r.UpdateAsync(productId, It.IsAny<Product>())).Returns(Task.CompletedTask);
+            _redisMock.Setup(r => r.RemoveAsync("products:all")).Returns(Task.CompletedTask);
+
             await _service.SoftDeleteAsync(productId);
 
-            // Assert
-            _repoMock.Verify(r => r.SoftDeleteAsync(productId), Times.Once);
+            _blobStorageMock.Verify(b => b.DeleteAsync(blobPath), Times.Once);
+            _repoMock.Verify(r => r.UpdateAsync(productId, It.Is<Product>(p => !p.IsActive)), Times.Once);
+            _redisMock.Verify(r => r.RemoveAsync("products:all"), Times.Once);
         }
 
     }
