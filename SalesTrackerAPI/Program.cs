@@ -115,6 +115,8 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
+builder.Services.AddScoped<IAzureBlobStorageService, AzureBlobStorageService>();
+
 
 
 
@@ -151,6 +153,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.Configure<AuthenticationSettings>(
     builder.Configuration.GetSection("AuthenticationSettings")
 );
+
+builder.Services.Configure<AzureBlobOptions>(
+    builder.Configuration.GetSection("AzureBlob"));
 
 
 

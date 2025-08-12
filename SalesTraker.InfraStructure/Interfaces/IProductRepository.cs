@@ -12,6 +12,7 @@ namespace SalesTracker.InfraStructure.Interfaces
         Task UpdateAsync(int id, Product product);
         Task SoftDeleteAsync(int id);
         Task UpdateStockAsync(int id, int newStock);
+        Task UpdateImageAsync(int id, string imageUrl);
         Task<IEnumerable<Product>> GetLowStockAsync();
         Task<List<string>> GetAllCategoriesAsync();
 

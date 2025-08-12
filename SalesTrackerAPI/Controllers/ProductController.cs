@@ -116,7 +116,7 @@ namespace SalesTrackerAPI.Controllers
         public async Task<IActionResult> UpdateStock(int id, [FromBody] UpdateStockDto dto)
         {
 
-            _logger.LogInformation("PATCH /api/product/{id}/stock - Updating stock for product ID {ProductId} to {Stock}", id, dto.Stock);
+            _logger.LogInformation("PATCH /api/product/{id}/stock - Updating stock for product ID {ProductId} to {Stock}", id,id, dto.Stock);
 
             var product = await _productService.GetByIdAsync(id);
             if (product == null)
@@ -205,6 +205,36 @@ namespace SalesTrackerAPI.Controllers
             return Ok(ApiResponse<PaginatedResult<ReadProductDto>>.Ok(paginatedProducts, "Products retrieved successfully"));
         }
 
+        [Authorize(Roles = "admin")]
+        [HttpPost("{id}/upload-image")]
+        [RequestSizeLimit(2097152)] // 2 MB
+        public async Task<IActionResult> UploadImage(int id, IFormFile file)
+        {
+            _logger.LogInformation("Uploading image for product ID {ProductId}", id);
+
+            if (file == null || file.Length == 0)
+            {
+                _logger.LogWarning("No file uploaded for product ID {ProductId}", id);
+                return BadRequest(ApiResponse<string>.Fail("No file uploaded"));
+            }
+
+            var allowedTypes = new[] { "image/jpeg", "image/jpg", "image/png" };
+            if (!allowedTypes.Contains(file.ContentType))
+            {
+                _logger.LogWarning("Invalid file type for product ID {ProductId}: {ContentType}", id, file.ContentType);
+                return BadRequest(ApiResponse<string>.Fail("Invalid file type"));
+            }
+
+            var product = await _productService.UploadProductImageAsync(id, file);
+            if (product == null)
+            {
+                _logger.LogWarning("Product not found or inactive for image upload: ID {ProductId}", id);
+                return NotFound(ApiResponse<string>.Fail(APIMessages.ProductNotFound));
+            }
+
+            _logger.LogInformation("Image uploaded successfully for product ID {ProductId}", id);
+            return Ok(ApiResponse<ReadProductDto>.Ok(product, "Image uploaded successfully"));
+        }
 
     }
 }

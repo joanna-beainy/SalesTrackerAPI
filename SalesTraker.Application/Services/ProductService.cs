@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Logging;
 using SalesTracker.Application.DTOs;
@@ -17,12 +18,14 @@ namespace SalesTracker.Application.Services
         private readonly IMapper _mapper;
         private readonly IRedisCacheService _redisCache;
         private readonly ILogger<ProductService> _logger;
-        public ProductService(IProductRepository repo, IMapper mapper, IRedisCacheService redisCache, ILogger<ProductService> logger)
+        private readonly IAzureBlobStorageService _blobStorage;
+        public ProductService(IProductRepository repo, IMapper mapper, IRedisCacheService redisCache, ILogger<ProductService> logger, IAzureBlobStorageService blobStorage)
         {
             _repo = repo;
             _mapper = mapper;
             _redisCache = redisCache;
             _logger = logger;
+            _blobStorage = blobStorage;
         }
 
         public async Task<IEnumerable<ReadProductDto>> GetAllAsync()
@@ -121,12 +124,28 @@ namespace SalesTracker.Application.Services
                 return;
             }
 
+            // 🧹 Delete image from blob storage if it exists
+            if (!string.IsNullOrEmpty(product.ImageUrl))
+            {
+                try
+                {
+                    var blobPath = _blobStorage.ExtractBlobPath(product.ImageUrl);
+                    await _blobStorage.DeleteAsync(blobPath);
+                    _logger.LogInformation("Deleted blob for product ID {ProductId}", id);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to delete blob for product ID {ProductId}", id);
+                }
+            }
+
             product.IsActive = false;
             await _repo.UpdateAsync(id, product);
             await _redisCache.RemoveAsync("products:all");
 
             _logger.LogInformation("Product ID {ProductId} soft deleted and cache updated", id);
         }
+
 
         public async Task UpdateStockAsync(int id, UpdateStockDto dto)
         {
@@ -198,6 +217,35 @@ namespace SalesTracker.Application.Services
 
             return new PaginatedResult<ReadProductDto>(mapped, allProducts.Count(), page, pageSize);
         }
+
+
+        public async Task<ReadProductDto?> UploadProductImageAsync(int productId, IFormFile file)
+        {
+            var product = await _repo.GetByIdAsync(productId);
+            if (product == null || !product.IsActive)
+                return null;
+
+            // Delete old image if it exists
+            if (!string.IsNullOrEmpty(product.ImageUrl))
+            {
+                var blobPath = _blobStorage.ExtractBlobPath(product.ImageUrl);
+                await _blobStorage.DeleteAsync(blobPath);
+            }
+
+            var extension = Path.GetExtension(file.FileName);
+            var newBlobPath = $"products/{productId}/{Guid.NewGuid()}{extension}";
+
+            using var stream = file.OpenReadStream();
+            var imageUrl = await _blobStorage.UploadAsync(stream, file.ContentType, newBlobPath);
+
+            await _repo.UpdateImageAsync(productId, imageUrl);
+
+            var updated = await _repo.GetByIdAsync(productId);
+            return _mapper.Map<ReadProductDto>(updated);
+        }
+
+
+
 
     }
 }
