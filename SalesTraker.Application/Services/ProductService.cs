@@ -7,6 +7,7 @@ using SalesTracker.Application.Interfaces;
 using SalesTracker.InfraStructure.Interfaces;
 using SalesTracker.InfraStructure.Models.Entities;
 using SalesTracker.InfraStructure.Repositories;
+using SalesTracker.Shared.Messages;
 using SalesTracker.Shared.Responses;
 using System.Text.Json;
 
@@ -19,13 +20,15 @@ namespace SalesTracker.Application.Services
         private readonly IRedisCacheService _redisCache;
         private readonly ILogger<ProductService> _logger;
         private readonly IAzureBlobStorageService _blobStorage;
-        public ProductService(IProductRepository repo, IMapper mapper, IRedisCacheService redisCache, ILogger<ProductService> logger, IAzureBlobStorageService blobStorage)
+        private readonly IStockAlertQueueService _stockAlertQueue;
+        public ProductService(IProductRepository repo, IMapper mapper, IRedisCacheService redisCache, ILogger<ProductService> logger, IAzureBlobStorageService blobStorage, IStockAlertQueueService stockAlertQueue)
         {
             _repo = repo;
             _mapper = mapper;
             _redisCache = redisCache;
             _logger = logger;
             _blobStorage = blobStorage;
+            _stockAlertQueue = stockAlertQueue;
         }
 
         public async Task<IEnumerable<ReadProductDto>> GetAllAsync()
@@ -158,15 +161,40 @@ namespace SalesTracker.Application.Services
                 return;
             }
 
-            await _repo.UpdateStockAsync(id, dto.Stock);
+            var previousStock = product.Stock;
+            var newStock = dto.Stock;
+
+            await _repo.UpdateStockAsync(id, newStock);
             await _redisCache.RemoveAsync("products:all");
 
             _logger.LogInformation("Stock updated for product ID {ProductId} and cache cleared", id);
+
+            if (previousStock >= 5 && newStock < 5)
+            {
+                var alert = new LowStockAlertMessage
+                {
+                    ProductId = product.Id,
+                    ProductName = product.Name,
+                    CurrentStock = newStock,
+                    Timestamp = DateTime.UtcNow
+                };
+
+                try
+                {
+                    await _stockAlertQueue.EnqueueAsync(alert);
+                    _logger.LogInformation("Low stock alert queued for product ID {ProductId}", id);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to enqueue low stock alert for product ID {ProductId}", id);
+                }
+            }
         }
+
 
         public async Task<List<string>> GetAllCategoriesAsync()
         {
-           _logger.LogInformation("Retrieving all product categories");
+            _logger.LogInformation("Retrieving all product categories");
 
             var categories = await _repo.GetAllCategoriesAsync();
 
