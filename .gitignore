@@ -23,6 +23,7 @@ Logs/
 
 # Secrets and environment files
 appsettings.Development.json
+SalesTracker.EmailEngine/appsettings.json
 .env
 
 # NuGet packages
