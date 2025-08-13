@@ -31,7 +31,8 @@ namespace SalesTracker.Tests.Services
                 _mapperMock.Object,
                 _redisMock.Object,
                 _loggerMock.Object,
-                _blobStorageMock.Object
+                _blobStorageMock.Object,
+                null
             );
         }
 

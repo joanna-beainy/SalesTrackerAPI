@@ -1,8 +1,10 @@
+using Azure.Storage.Queues;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SalesTracker.Application.Interfaces;
@@ -12,10 +14,10 @@ using SalesTracker.InfraStructure.Interfaces;
 using SalesTracker.InfraStructure.Repositories;
 using SalesTracker.Shared.Settings;
 using SalesTrackerAPI.Middlewares;
+using Serilog;
 using StackExchange.Redis;
 using System.Security.Claims;
 using System.Text;
-using Serilog;
 
 Log.Logger = new LoggerConfiguration()
     .Enrich.WithThreadId()
@@ -116,7 +118,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
 builder.Services.AddScoped<IAzureBlobStorageService, AzureBlobStorageService>();
-
+builder.Services.AddScoped<IStockAlertQueueService, StockAlertQueueService>();
 
 
 
@@ -126,6 +128,13 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     var configuration = builder.Configuration.GetSection("Redis")["ConnectionString"];
     return ConnectionMultiplexer.Connect(configuration);
 });
+
+builder.Services.AddSingleton<QueueClient>(provider =>
+{
+    var options = provider.GetRequiredService<IOptions<AzureQueueOptions>>().Value;
+    return new QueueClient(options.ConnectionString, options.QueueName);
+});
+
 
 
 builder.Services.AddAutoMapper(typeof(Program));
@@ -156,6 +165,9 @@ builder.Services.Configure<AuthenticationSettings>(
 
 builder.Services.Configure<AzureBlobOptions>(
     builder.Configuration.GetSection("AzureBlob"));
+
+builder.Services.Configure<AzureQueueOptions>(
+    builder.Configuration.GetSection("AzureQueue"));
 
 
 

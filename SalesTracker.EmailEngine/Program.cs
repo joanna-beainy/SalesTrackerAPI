@@ -1,74 +1,81 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Configuration.Binder;
-using SalesTracker.EmailEngine;
+using Serilog;
+using Azure.Storage.Queues;
+using SalesTracker.EmailEngine.Interfaces;
+using SalesTracker.EmailEngine.Services;
+using SalesTracker.EmailEngine.Background;
+using SalesTracker.EmailEngine.Settings;
 using SalesTracker.InfraStructure.Data;
 using SalesTracker.InfraStructure.Interfaces;
 using SalesTracker.InfraStructure.Repositories;
-using SalesTracker.EmailEngine.Interfaces;
-using SalesTracker.EmailEngine.Settings;
-using SalesTracker.EmailEngine.Services;
+using SalesTracker.Shared.Settings;
 
+// 🔧 Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.Seq("http://localhost:5341") 
+    .CreateLogger();
 
-class Program
+try
 {
-    static async Task Main(string[] args)
-    {
-        // Load configuration
-        var configuration = new ConfigurationBuilder()
-            .SetBasePath(AppContext.BaseDirectory)
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .Build();
+    Log.Information("🚀 Starting SalesTracker.EmailEngine...");
 
-        // Set up dependency injection
-        var services = new ServiceCollection();
-
-        // Add logging
-        services.AddLogging(logging =>
+    await Host.CreateDefaultBuilder(args)
+        .UseSerilog() 
+        .ConfigureAppConfiguration(config =>
         {
-            logging.AddConsole();
-        });
-
-        services.AddSingleton<IConfiguration>(configuration);
-
-        // Bind SMTP settings
-        services.Configure<SmtpSettings>(options => configuration.GetSection("SmtpSettings").Bind(options));
-
-        // Register DbContext
-        services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
-
-        // Register application and infrastructure services
-        services.AddScoped<ISaleRepository, SaleRepository>();
-        services.AddScoped<IEmailSender, EmailSender>();
-
-        // Build service provider
-        var serviceProvider = services.BuildServiceProvider();
-
-        // Create scope for scoped services
-        using var scope = serviceProvider.CreateScope();
-        var scopedProvider = scope.ServiceProvider;
-
-        var logger = scopedProvider.GetRequiredService<ILogger<Program>>();
-
-        try
+            config.SetBasePath(AppContext.BaseDirectory);
+            config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+        })
+        .ConfigureServices((context, services) =>
         {
-            var saleRepo = scopedProvider.GetRequiredService<ISaleRepository>();
-            var emailSender = scopedProvider.GetRequiredService<IEmailSender>();
+            var configuration = context.Configuration;
 
-            var today = DateTime.Today;
-            var summary = await saleRepo.GetAggregatedSalesByDateAsync(today);
+            // 🔧 Bind settings
+            services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
+            services.Configure<AzureQueueOptions>(configuration.GetSection("AzureQueue"));
 
-            await emailSender.SendSummaryEmailAsync(summary);
+            // 🔧 Register DbContext
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-            logger.LogInformation("📧 Sales summary email sent successfully.");
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "🚨 Failed to send sales summary email.");
-        }
-    }
+            // 🔧 Register services
+            services.AddScoped<ISaleRepository, SaleRepository>();
+            services.AddScoped<IEmailSender, EmailSender>();
+
+            // 🔧 Queue client
+            services.AddSingleton<QueueClient>(provider =>
+            {
+                var options = provider.GetRequiredService<IOptions<AzureQueueOptions>>().Value;
+                return new QueueClient(options.ConnectionString, options.QueueName);
+            });
+
+            // 🔧 Background services
+            services.AddHostedService<StockAlertProcessor>();
+            services.AddHostedService<DailySummarySender>();
+
+            // ✅ Use Serilog for logging
+            services.AddLogging(logging =>
+            {
+                logging.ClearProviders();
+                logging.AddSerilog();
+            });
+        })
+        .RunConsoleAsync();
+
+    Log.Information("✅ SalesTracker.EmailEngine stopped gracefully.");
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "❌ SalesTracker.EmailEngine terminated unexpectedly.");
+}
+finally
+{
+    Log.CloseAndFlush();
 }
